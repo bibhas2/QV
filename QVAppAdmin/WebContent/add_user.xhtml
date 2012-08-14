@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<ui:composition template="template.xhtml.BAK">
+<ui:define name="content">
+<h3>Add a User</h3>
+<div style="color: red"><h:messages/></div>
+<h:form>
+Full name:<br/>
+<h:inputText value="#{userCtrl.user.name}" id="name"/><br/>
+E-mail:<br/>
+<h:inputText value="#{userCtrl.user.email}" id="email"/><br/>
+Phone:<br/>
+<h:inputText value="#{userCtrl.user.phone}" id="phone"/><br/>
+Password:<br/>
+<h:inputSecret value="#{userCtrl.user.passwordString}" id="password"/><br/>
+Gallery:<br/>
+<h:selectOneListbox value="#{userCtrl.user.galleryId}" size="1">
+	<f:selectItems var="gallery" value="#{userCtrl.galleryList}" itemValue="#{gallery.id}" itemLabel="#{gallery.name}"/>
+</h:selectOneListbox>
+<br/>
+<h:commandButton action="#{userCtrl.addUser}" value="Add User" />
+</h:form>
+</ui:define>
+</ui:composition>
+</html>

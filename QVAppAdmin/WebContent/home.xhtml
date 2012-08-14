@@ -1,0 +1,15 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<ui:composition template="template.xhtml">
+<ui:define name="content">
+<h3>Site Administration</h3>
+<h:form>
+<h:link outcome="add_user" value="Add User" /><br/>
+<h:link outcome="login_test" value="Login Test" /><br/>
+<h:link action="manage_galleries" value="Manage Galleries" />
+</h:form>
+</ui:define>
+</ui:composition>
+</html>

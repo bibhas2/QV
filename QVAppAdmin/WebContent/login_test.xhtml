@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<ui:composition template="template.xhtml.BAK">
+<ui:define name="content">
+<h3>Login Test</h3>
+<h:panelGroup rendered="#{!empty userCtrl.message}">
+<p><b>#{userCtrl.message}</b></p>
+</h:panelGroup>
+<h:form>
+E-mail:<br/>
+<h:inputText value="#{userCtrl.user.email}" id="email"/><br/>
+Password:<br/>
+<h:inputSecret value="#{userCtrl.user.passwordString}" id="password"/><br/>
+<br/>
+<h:commandButton action="#{userCtrl.testLogin}" value="Test Login" />
+
+</h:form>
+</ui:define>
+</ui:composition>
+</html>

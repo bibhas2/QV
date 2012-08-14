@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<f:metadata>
+    <f:event listener="#{controller.loadArt()}" type="preRenderView"/>
+    <f:viewParam name="id" value="#{controller.artId}" />
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+
+<ui:define name="script_content">
+<script type="text/javascript">
+$(function(){
+})
+</script>
+</ui:define>
+
+<ui:define name="body_content">
+
+<div data-role="page" id="details" data-theme="c" data-add-back-btn="true">
+
+<div data-role="header">
+    <h2>#{controller.art.name}</h2>
+</div> 
+
+<div data-role="content">
+
+<p>
+<img src="http://#{controller.hostName}/media/#{controller.art.thumbnail}"/>
+</p>
+<div data-role="collapsible" data-collapsed="true" data-content-theme="d">
+<h3>#{controller.art.artistList[0].name}, #{controller.art.name}</h3>
+<p>
+#{controller.art.description}
+</p>
+</div>
+
+<div data-role="listview" data-inset="true">
+<ui:repeat value="#{controller.art.mediaList}" var="media">
+    <li>
+    <a href="http://#{controller.hostName}/media/#{media.url}">
+    <img src="assets/images/media_#{media.type}.png" class="ui-li-icon"/>
+    #{media.label}
+    </a>
+    </li>
+</ui:repeat>
+</div>
+
+<div data-role="listview" data-inset="true">
+    <li>
+    <a href="work.xhtml?id=#{controller.art.artistList[0].id}">
+    More work by #{controller.art.artistList[0].name}
+	</a>
+	</li>
+</div>
+
+</div>
+
+</div>
+
+</ui:define>
+
+</ui:composition>
+</html>

@@ -1,0 +1,375 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<f:metadata>
+    <f:event listener="#{controller.checkSession()}" type="preRenderView"/>
+    <f:viewParam name="id" value="#{controller.art.id}" />
+</f:metadata>
+<ui:composition template="template.xhtml">
+<ui:define name="script_content">
+<style>
+.rounded_box {
+	border-radius: 5px;
+	border: solid;
+}
+.media {
+	border-radius: 5px;
+	border: thin solid;
+	padding-left: 5px;
+}
+img.icon {
+	width: 15px;
+	margin-left: 5px;
+}
+</style>
+
+<script type="text/javascript">
+/* <![CDATA[ */  
+var artId = #{controller.art.id};
+var artistList = null;
+var thisArt = null;
+
+$(function(){
+	$("#new_media_dialog").dialog({
+		autoOpen: false,
+		buttons: {
+			"Add Media": addMedia
+		}
+	});
+	$("#new_artist_dialog").dialog({
+		autoOpen: false,
+		buttons: {
+			"Add Artist": addArtist
+		}
+	});
+	
+	$("#select_artist_dialog").dialog({
+		autoOpen: false,
+		width: 340,
+		buttons: {
+			"Select Artist": selectArtist
+		}
+	});
+	$("#update_artist_dialog").dialog({
+			autoOpen: false,
+			buttons: {
+				"Update Artist": updateArtist
+			}
+	});
+	
+	loadData();
+
+	$("button").button().width("150px");
+	$("#add_media").click(function() {
+		$("#new_media_dialog").dialog("open");
+	});
+	$("#add_artist").click(function() {
+		$("#new_artist_dialog").dialog("open");
+	});
+
+	$("#choose_artists").click(function() {
+		if (artistList === null) {
+			loadArtistList();
+		} else {
+			$("#select_artist_dialog").dialog("open");
+		}
+	});
+	
+	$("#qr_image")[0].src = "http://chart.apis.google.com/chart?cht=qr&chs=350x350&chld=L&choe=UTF-8&chl=http%3A%2F%2F"
+		+ window.location.hostname
+		+ "/QVPublic/faces/art.xhtml?id="
+		+ artId;
+});
+
+function loadData() {
+	$.ajax({
+		url: "rest/api/arts/" + artId,
+		type: "GET",
+		success: function(data){
+			displayArt(data);
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+
+function loadArtistList() {
+	$.ajax({
+		url: "rest/api/artists",
+		type: "GET",
+		success: function(data){
+			artistList = data;
+			var artistTable = $("#artist_table")[0];
+			for (var i = 0; i < data.length; ++i) {
+				var option = document.createElement("option");
+				option.text = data[i].name;
+				option.value = data[i].id;
+				artistTable.appendChild(option);
+			}
+		
+			$("#select_artist_dialog").dialog("open");
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+
+function selectArtist() {
+	var artistTable = $("#artist_table")[0];
+	if (artistTable.selectedIndex < 0) {
+		return;
+	}
+	var artistId = artistTable.options[artistTable.selectedIndex].value;
+	
+	$.ajax({
+		url: "rest/api/arts/" + artId + "/artists/" + artistId,
+		type: "PUT",
+		contentType: "application/json",
+		success: function(data){
+			loadData();
+			$("#select_artist_dialog").dialog("close");
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+
+function showArtistUpdate(id) {
+	var artist = null;
+
+	for (var i = 0; i < thisArt.artistList.length; ++i) {
+		if (thisArt.artistList[i].id === id) {
+			artist = thisArt.artistList[i];
+		}
+	}
+	if (artist == null) {
+		console.log("Can not find artist");
+		return;
+	}
+	$("#artist_name_update").val(artist.name);
+	$("#artist_photo_update").val(artist.photo);
+	$("#artist_description_update").val(artist.description);
+	$("#artist_id_update").val(artist.id);
+
+	$("#update_artist_dialog").dialog("open");
+}
+
+function updateArtist() {
+	var artist = {
+			id: $("#artist_id_update").val(),
+			name: $("#artist_name_update").val(),
+			photo: $("#artist_photo_update").val(),
+			description: $("#artist_description_update").val()
+	};
+
+	$.ajax({
+		url: "rest/api/artists/" + artist.id,
+		type: "POST",
+		contentType: "application/json",
+		data: JSON.stringify(artist),
+		success: function(data){
+			loadData();
+			$("#update_artist_dialog").dialog("close");
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+
+function displayArt(art) {
+	thisArt = art;
+	
+	$("#art_name").html(art.name);
+
+	var mediaListDiv = $("#media_list");
+	mediaListDiv.html("");
+	for (var i = 0; i != art.mediaList.length; ++i) {
+		var txt = $("<p>", {"class": "media", "text": art.mediaList[i].label});
+
+		txt.append(
+				$("<img>", {
+					"src": "assets/images/pencil.png",
+					"title": "Edit",
+					"class": "icon",
+					"onclick": "deleteMedia(" +  art.mediaList[i].id + ");",
+					})
+			);
+
+		txt.append(
+			$("<img>", {
+				"src": "assets/images/delete.png",
+				"title": "Delete",
+				"class": "icon",
+				"onclick": "deleteMedia(" +  art.mediaList[i].id + ");",
+				})
+		);
+		mediaListDiv.append(txt);
+	}
+
+	var artistListDiv = $("#artist_list");
+	artistListDiv.html("");
+	for (var i = 0; i != art.artistList.length; ++i) {
+
+		var txt = $("<p>", {"class": "media", "text": art.artistList[i].name});
+		txt.append(
+				$("<img>", {
+					"src": "assets/images/pencil.png",
+					"title": "Edit artist",
+					"class": "icon",
+					"onclick": "showArtistUpdate(" +  art.artistList[i].id + ");",
+					})
+			);
+		txt.append(
+				$("<img>", {
+					"src": "assets/images/delete.png",
+					"title": "Remove from this art work",
+					"class": "icon",
+					"onclick": "deleteArtistFromArt(" +  art.artistList[i].id + ", " + art.id + ");",
+					})
+			);
+			
+		artistListDiv.append(txt);
+	}
+}
+
+function addMedia() {
+	var artMedia = new Object();
+
+	artMedia.label = $("#label").val();
+	artMedia.url = $("#url").val();
+	artMedia.type = $('input[name=media_type]:checked').val();
+	artMedia.artId = artId;
+	
+	var data = JSON.stringify(artMedia);
+
+	$.ajax({
+		url: "rest/api/artmedias",
+		type: "PUT",
+		contentType: "application/json",
+		data: data,
+		success: function(){
+			$("#new_media_dialog").dialog("close");
+			loadData();
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+
+function addArtist() {
+	var artist = new Object();
+
+	artist.name = $("#name").val();
+	artist.photo = $("#photo").val();
+	artist.description = $("#description").val();
+	
+	var data = JSON.stringify(artist);
+
+	$.ajax({
+		url: "rest/api/arts/" + artId + "/artists",
+		type: "PUT",
+		contentType: "application/json",
+		data: data,
+		success: function(){
+			loadData();
+			$("#new_artist_dialog").dialog("close");
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+
+function deleteMedia(id) {
+	$.ajax({
+		url: "rest/api/artmedias/" + id,
+		type: "DELETE",
+		success: function(){
+			loadData();
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+
+function deleteArtistFromArt(artistId, artId) {
+	$.ajax({
+		url: "rest/api/arts/" + artId + "/artists/" + artistId,
+		type: "DELETE",
+		success: function(){
+			loadData();
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+function showMessage(msg, bError) {
+	$("#new_media_dialog").dialog("close");
+	//alert(msg);
+}
+/* ]]> */ 
+</script>
+</ui:define>
+
+<ui:define name="left_content">
+<h1>Manage Media</h1>
+<p id="art_name"></p>
+<h3>Artists</h3>
+<div id="artist_list">
+
+</div>
+<p>
+<button id="choose_artists">Choose Artists</button>
+<button id="add_artist">Add New Artist</button>
+</p>
+
+<h3>Media</h3>
+<div id="media_list">
+
+</div>
+<p>
+<button id="add_media">Add Media</button>
+</p>
+
+<h3>QR Code</h3>
+<p>
+<img src="" id="qr_image"/>
+</p>
+
+<div id="new_media_dialog" title="Add New Media">
+Label:<br/>
+<input type="text" id="label" size="40"/><br/>
+URL:<br/>
+<input type="text" id="url" size="40"/><br/>
+Type:<br/>
+<input type="radio" name="media_type" value="A" checked="checked"/> Audio
+<input type="radio" name="media_type" value="V"/> Video
+<input type="radio" name="media_type" value="P"/> PDF Document
+</div>
+
+<div id="new_artist_dialog" title="Add New Artist">
+Full name:<br/>
+<input type="text" id="name" size="40"/><br/>
+Photo URL:<br/>
+<input type="text" id="photo" size="40"/><br/>
+Description:<br/>
+<textarea rows="10" cols="40" id="description"></textarea>
+</div>
+
+<div id="update_artist_dialog" title="Update Artist">
+Full name:<br/>
+<input type="text" id="artist_name_update" size="40"/><br/>
+Photo URL:<br/>
+<input type="text" id="artist_photo_update" size="40"/><br/>
+Description:<br/>
+<textarea rows="10" cols="40" id="artist_description_update"></textarea>
+
+<input type="hidden" id="artist_id_update"/>
+
+</div>
+
+<div id="select_artist_dialog" title="Select an artist">
+Please select an artist to add to this art work:<br/>
+<select id="artist_table" size="10" class="rounded_box" style="width: 300px">
+</select>
+</div>
+
+</ui:define>
+
+<ui:define name="right_content">
+</ui:define>
+
+</ui:composition>
+</html>

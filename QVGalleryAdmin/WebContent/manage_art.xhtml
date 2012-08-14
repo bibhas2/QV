@@ -1,0 +1,191 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<f:metadata>
+    <f:event listener="#{controller.checkSession()}" type="preRenderView"/>
+</f:metadata>
+<ui:composition template="template.xhtml">
+<ui:define name="script_content">
+<style>
+.rounded_box {
+	border-radius: 5px;
+	border: solid;
+}
+</style>
+
+<script type="text/javascript">
+/* <![CDATA[ */ 
+var artTable;
+var artList;
+
+$(function(){
+	$("#create_art").button().width("300px");
+	$("#new_dialog").dialog({
+		autoOpen: false,
+		buttons: {
+			"Add Exhibit": addItem
+			}
+	});
+	$("#update_art_dialog").dialog({
+		autoOpen: false,
+		buttons: {
+			"Update Exhibit": updateArt
+		}
+	});
+	
+	$("#create_art").click(function() {
+		$("#new_dialog").dialog("open");
+	});
+
+	artTable = $("#art_table")[0];
+	loadData();
+
+	$("#edit_art").button().width("150px").click(
+			function() {
+				if (artTable.selectedIndex < 0) {
+					return;
+				}
+				var id = artTable.options[artTable.selectedIndex].value;
+				showEditArt();
+			}
+	);
+	$("#manage_art").button().width("150px").click(
+		function() {
+			if (artTable.selectedIndex < 0) {
+				return;
+			}
+			var id = artTable.options[artTable.selectedIndex].value;
+			document.location = "manage_media.xhtml?id="+id;
+		}
+	);
+	
+});
+
+function showEditArt() {
+	if (artTable.selectedIndex < 0) {
+		return;
+	}
+	var art = artList[artTable.selectedIndex];
+	$("#art_name_update").val(art.name);
+	$("#art_thumbnail_update").val(art.thumbnail);
+	$("#art_description_update").val(art.description);
+	$("#art_id_update").val(art.id);
+	
+	$("#update_art_dialog").dialog("open");
+}
+
+function updateArt() {
+	var art = new Object();
+
+	art.name = $("#art_name_update").val();
+	art.description = $("#art_description_update").val();
+	art.thumbnail = $("#art_thumbnail_update").val();
+	art.id = $("#art_id_update").val();
+
+	var data = JSON.stringify(art);
+
+	$.ajax({
+		url: "rest/api/arts/" + art.id,
+		type: "POST",
+		contentType: "application/json",
+		data: data,
+		success: function(){
+			loadData();
+			$("#update_art_dialog").dialog("close");
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+
+function addItem() {
+	var art = new Object();
+
+	art.name = $("#name").val();
+	art.description = $("#description").val();
+	art.thumbnail = $("#thumbnail").val();
+
+	var data = JSON.stringify(art);
+
+	$.ajax({
+		url: "rest/api/arts",
+		type: "PUT",
+		contentType: "application/json",
+		data: data,
+		success: function(){
+			showMessage("Exhibit was added successfully!", false);
+			loadData();
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+function showMessage(msg, bError) {
+	$("#new_dialog").dialog("close");
+	alert(msg);
+}
+
+function loadData() {
+	$.ajax({
+		url: "rest/api/arts",
+		type: "GET",
+		success: function(data){
+			artTable.options.length = 0;
+			for (var i = 0; i != data.length; ++i) {
+				var row = {};
+				var option = document.createElement("option");
+				option.text = data[i].name;
+				option.value = data[i].id;
+				artTable.appendChild(option);
+			}
+			artList = data;
+		},
+		error: function(){showMessage("There was an error!", true)}
+	});
+}
+/* ]]> */ 
+</script>
+</ui:define>
+
+<ui:define name="left_content">
+<h1>Manage Art</h1>
+
+<p>
+<a id="create_art">Add New Exhibit</a>
+</p>
+
+<select id="art_table" size="10" class="rounded_box" style="width: 300px">
+</select>
+
+<p>
+<a id="edit_art">Edit Exhibit</a>
+<a id="manage_art">Manage Media</a>
+</p>
+
+<div id="new_dialog" title="Add New Exhibit">
+Name:<br/>
+<input type="text" id="name" size="40"/><br/>
+Description:<br/>
+<textarea rows="10" cols="40" id="description"></textarea>
+Thumbnail image:<br/>
+<input type="text" id="thumbnail" size="40"/><br/>
+<br/>
+</div>
+
+<div id="update_art_dialog" title="Update Exhibit">
+Name:<br/>
+<input type="text" id="art_name_update" size="40"/><br/>
+Description:<br/>
+<textarea rows="10" cols="40" id="art_description_update"></textarea>
+Thumbnail image:<br/>
+<input type="text" id="art_thumbnail_update" size="40"/><br/>
+<input type="hidden" id="art_id_update"/>
+<br/>
+</div>
+
+</ui:define>
+
+<ui:define name="right_content">
+</ui:define>
+
+</ui:composition>
+</html>

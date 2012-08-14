@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<script type="text/javascript" src="jquery-ui/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript"
+		src="jquery-ui/js/jquery-ui-1.8.22.custom.min.js"></script>
+	<link href="jquery-ui/css/start/jquery-ui-1.8.22.custom.css"
+		rel="stylesheet" type="text/css" />
+
+	<title>Beez Design Template</title>
+	<link rel="stylesheet" type="text/css" href="theme/style.css" />
+	<!--[if IE 6]>
+<link rel="stylesheet" type="text/css" href="theme/iecss.css" />
+<![endif]-->
+	<style>
+</style>
+	<ui:insert name='script_content'>
+	</ui:insert>
+</h:head>
+<body>
+
+	<div id="main_container">
+		<div class="top_illustration">
+			<img src="theme/images/been.png" alt="" title="" width="156"
+				height="143" />
+		</div>
+		<div id="header">
+			<div class="logo">
+				<a href="home.xhtml"><img src="theme/images/logo.gif" alt=""
+					title="" border="0" /></a>
+			</div>
+
+		</div>
+
+		<div id="menu_tab">
+			<ul class="menu">
+				<li><a href="home.xhtml" class="nav_selected"> home </a></li>
+				<li class="divider"></li>
+				<li><a href="#" class="nav"> services</a></li>
+				<li class="divider"></li>
+				<li><a href="projects.html" class="nav"> portofolio</a></li>
+				<li class="divider"></li>
+				<li><a href="#" class="nav"> clients</a></li>
+				<li class="divider"></li>
+				<li><a href="contact.html" class="nav"> contact </a></li>
+
+			</ul>
+		</div>
+
+
+		<div id="main_content">
+
+			<div id="middle_banner">
+				<div class="middle_banner_content">
+					<img src="theme/images/banner_content.png" alt="" title=""
+						width="417" height="142" />
+				</div>
+			</div>
+
+
+			<div id="left_content">
+				<ui:insert name='left_content'>
+				</ui:insert>
+			</div>
+
+			<div id="right_content">
+				<h:form class="members_login" rendered="#{!empty userSession.user}">
+					<h1>Welcome!</h1>
+					<div class="login_row">
+						#{userSession.user.name}<br /> #{userSession.gallery.name}
+					</div>
+					<div class="login_row">
+						<h:commandLink class="login_submit" value="logout"
+							action="#{controller.logout()}" />
+					</div>
+				</h:form>
+				<h:form class="members_login"  rendered="#{empty userSession.user}">
+					<h1>Clients login</h1>
+					<h:messages errorStyle="color:red" />
+					<div class="login_row">
+						<label class="login">email:</label>
+						<h:inputText value="#{controller.user.email}" class="login_input" />
+					</div>
+					<div class="login_row">
+						<label class="login">password:</label>
+						<h:inputSecret value="#{controller.user.passwordString}"
+							class="login_input" />
+					</div>
+					<div class="login_row">
+						<h:commandLink class="login_submit" value="login"
+							action="#{controller.login()}" />
+					</div>
+				</h:form>
+
+				<h1>Latest News</h1>
+				<p class="news">
+					<img src="theme/images/calendar.gif" alt="" title=""
+						class="left_img" /> We are now offering a summer special. New
+						subscribers get $50 off their monthly subscription rate.
+				</p>
+
+				<ui:insert name='right_content'>
+				</ui:insert>
+			</div>
+
+
+			<div id="footer">
+				<img src="theme/images/footer_logo.gif" alt="" title="" /> Beez
+				Design &copy; 2008 <br /> <a
+					href="http://csscreme.com/freecsstemplates/" title="free templates"><img
+					src="theme/images/csscreme.gif" alt="free templates"
+					title="free templates" border="0" /></a>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

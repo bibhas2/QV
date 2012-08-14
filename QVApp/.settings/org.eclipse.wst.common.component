@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="QVApp">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="QVGalleryAdmin.war" deploy-path="/" handle="module:/resource/QVGalleryAdmin/QVGalleryAdmin">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="QVAppAdmin.war" deploy-path="/" handle="module:/resource/QVAppAdmin/QVAppAdmin">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="QVEJB.jar" deploy-path="/" handle="module:/resource/QVEJB/QVEJB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="QVPublic.war" deploy-path="/" handle="module:/resource/QVPublic/QVPublic">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

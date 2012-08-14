@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<f:metadata>
+    <f:event listener="#{controller.loadArtist()}" type="preRenderView"/>
+    <f:viewParam name="id" value="#{controller.artistId}" />
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+
+<ui:define name="script_content">
+<script type="text/javascript">
+$(function(){
+})
+</script>
+</ui:define>
+
+<ui:define name="body_content">
+
+<div data-role="page" id="details" data-theme="c" data-add-back-btn="true">
+
+<div data-role="header">
+    <h2>#{controller.artist.name}</h2>
+</div> 
+
+<div data-role="content">
+
+<div data-role="collapsible" data-collapsed="true" data-content-theme="d">
+<h3>#{controller.artist.name}</h3>
+<p>
+#{controller.artist.description}
+</p>
+</div>
+<h3>Currently showing</h3>
+<div data-role="listview" data-inset="true" data-theme="d">
+<ui:repeat value="#{controller.artistWorkList}" var="art">
+    <li>
+    <a href="art.xhtml?id=#{art.id}">
+    <img src="http://#{controller.hostName}/media/#{art.thumbnail}"/>
+    #{art.name}
+    </a>
+    </li>
+</ui:repeat>
+</div>
+
+</div>
+
+</div>
+
+</ui:define>
+
+</ui:composition>
+</html>

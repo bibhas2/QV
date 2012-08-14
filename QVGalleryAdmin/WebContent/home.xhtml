@@ -1,0 +1,34 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<f:metadata>
+    <f:event listener="#{controller.checkSession()}" type="preRenderView"/>
+</f:metadata>
+<ui:composition template="template.xhtml">
+<ui:define name="script_content">
+<script type="text/javascript">
+$(function(){
+	$("#button_area a").button().width("300px");
+})
+</script>
+</ui:define>
+
+<ui:define name="left_content">
+<h1>Gallery Administration</h1>
+<div id="button_area">
+<p>
+<a href="manage_art.xhtml" id="manage_art">Manage Art</a>
+</p>
+<p>
+<a href="manage_art.xhtml" id="manage_art">Manage Users</a>
+</p>
+<p>
+<a href="manage_art.xhtml" id="manage_art">Manage Artists</a>
+</p>
+</div>
+</ui:define>
+<ui:define name="right_content">
+</ui:define>
+</ui:composition>
+</html>
