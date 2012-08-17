@@ -50,7 +50,8 @@ $(function(){
 		$("#upload_dialog").dialog("open");
 	});
 
-	$("#progress").hide();
+	$("#progressbar").hide();
+	$('#progressbar').progressbar();
 
 	loadData();
 });
@@ -62,8 +63,7 @@ function upload(){
 		return;
 	} else {
 		var file = fileIn.files[0];
-		console.log(file);
-		$("#progress").show();
+		$("#progressbar").show();
 		$.ajax({
 			url: "MediaUploader?fileName=" + file.name + "&mimeType=" + file.type +
 				"&label=" + $("#label").val(),
@@ -73,13 +73,19 @@ function upload(){
 			contentType: false,
 			success: function(){
 				loadData();
-				$("#progress").hide(); 
+				$("#progressbar").hide(); 
 				$("#upload_dialog").dialog("close");
-				},
+			},
 			error: function(){alert("Failed");},
-			beforeSend: function (xhr) {
-				xhr.onprogress = showProgress;
-			}
+			xhr: function() {
+		        myXhr = $.ajaxSettings.xhr();
+		        if(myXhr.upload){
+		            myXhr.upload.addEventListener('progress',showProgress, false);
+		        } else {
+			        console.log("Upload progress is not supported.");
+			    }
+		        return myXhr;
+		    }
 		});
 	}
 }
@@ -103,19 +109,29 @@ function loadData() {
 	
 }
 
+function deleteMedia(id) {
+	$.ajax({
+		url: "rest/api/medias/" + id,
+		type: "DELETE",
+		success: function(data){
+			loadData();
+		},
+		error: function(){showMessage("There was an error!");}
+	});
+}
+
 function showMessage(msg) {
 	alert(msg);
 }
 
 function showMediaList(data) {
-	console.log(data);
 	mediaList = data;
 	
 	var mediaListDiv = $("#media_list");
 	mediaListDiv.html("");
 	for (var i = 0; i != mediaList.length; ++i) {
 		var txt = $("<p>", {"class": "media", "text": mediaList[i].label});
-
+/*
 		txt.append(
 				$("<img>", {
 					"src": "assets/images/pencil.png",
@@ -124,7 +140,7 @@ function showMediaList(data) {
 					"onclick": "deleteMedia(" +  mediaList[i].id + ");",
 					})
 			);
-
+*/
 		txt.append(
 			$("<img>", {
 				"src": "assets/images/delete.png",
@@ -172,7 +188,7 @@ Media file:<br/>
 <input type="file" id="fileToUpload" class="mama"/><br/>
 Label:<br/>
 <input type="text" id="label" size="40"/><br/>
-<div id="progress"></div>
+<div id="progressbar"></div>
 </div>
 
 </ui:define>

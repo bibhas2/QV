@@ -22,6 +22,10 @@ img.icon {
 	width: 15px;
 	margin-left: 5px;
 }
+#art_thumbnail {
+	width: 150px;
+	border-radius: 5px;
+}
 </style>
 
 <script type="text/javascript">
@@ -177,6 +181,7 @@ function displayArt(art) {
 	thisArt = art;
 	
 	$("#art_name").html(art.name);
+	$("#art_thumbnail")[0].src = art.thumbnail;
 
 	var mediaListDiv = $("#media_list");
 	mediaListDiv.html("");
@@ -306,6 +311,8 @@ function showMessage(msg, bError) {
 <ui:define name="left_content">
 <h1>Manage Media</h1>
 <p id="art_name"></p>
+<p><img src="" id="art_thumbnail"></img></p>
+
 <h3>Artists</h3>
 <div id="artist_list">
 

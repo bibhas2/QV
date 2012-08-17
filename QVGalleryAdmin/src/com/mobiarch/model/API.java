@@ -140,6 +140,14 @@ public class API {
 		return mediaManager.getAllForGallery(session.getGallery().getId());
 	}
 
+	@DELETE
+	@Path("/medias/{id}")
+	public void deleteMedia(@PathParam("id") int mediaId) {
+		checkSession();
+		//TODO: Security check
+		mediaManager.deleteMedia(mediaId);
+	}
+
 	@GET
 	@Path("/arts")
 	@Produces(MediaType.APPLICATION_JSON)

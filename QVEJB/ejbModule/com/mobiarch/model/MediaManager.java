@@ -32,7 +32,7 @@ public class MediaManager {
 		em.flush();
 		
 		m.setFileName(getDerivedFileName(m));
-		File file = new File(pm.getStringValue("media_dir"), m.getFileName());
+		File file = getOSFile(m);
 		logger.info("Writing to: " + file.getAbsoluteFile());
 		logger.info("Gallery: " + m.getGalleryId());
 		
@@ -57,6 +57,11 @@ public class MediaManager {
 			throw new RuntimeException(e);
 		}
 	}
+
+	private File getOSFile(Media m) {
+		File file = new File(pm.getStringValue("media_dir"), m.getFileName());
+		return file;
+	}
 	
 	public List<Media> getAllForGallery(int galleryId) {
 		List<Media> list = em.createQuery("select m from Media m", Media.class).getResultList();
@@ -67,5 +72,17 @@ public class MediaManager {
 		}
 		
 		return list;
+	}
+
+	public Media getMedia(int id) {
+		return em.find(Media.class, id);
+	}
+	
+	public void deleteMedia(int mediaId) {
+		Media m = getMedia(mediaId);
+		File f = getOSFile(m);
+		
+		em.remove(em.find(Media.class, mediaId));
+		f.delete();
 	}
 }

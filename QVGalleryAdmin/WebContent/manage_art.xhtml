@@ -41,7 +41,7 @@ $(function(){
 	artTable = $("#art_table")[0];
 	loadData();
 
-	$("#edit_art").button().width("150px").click(
+	$("#edit_art").button().width("145px").click(
 			function() {
 				if (artTable.selectedIndex < 0) {
 					return;
@@ -50,7 +50,7 @@ $(function(){
 				showEditArt();
 			}
 	);
-	$("#manage_art").button().width("150px").click(
+	$("#manage_art").button().width("145px").click(
 		function() {
 			if (artTable.selectedIndex < 0) {
 				return;
@@ -149,16 +149,16 @@ function loadData() {
 <ui:define name="left_content">
 <h1>Manage Art</h1>
 
-<p>
-<a id="create_art">Add New Exhibit</a>
-</p>
-
 <select id="art_table" size="10" class="rounded_box" style="width: 300px">
 </select>
 
 <p>
 <a id="edit_art">Edit Exhibit</a>
 <a id="manage_art">Manage Media</a>
+</p>
+
+<p>
+<a id="create_art">Add New Exhibit</a>
 </p>
 
 <div id="new_dialog" title="Add New Exhibit">
