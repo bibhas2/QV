@@ -37,6 +37,7 @@ var thisArt = null;
 $(function(){
 	$("#new_media_dialog").dialog({
 		autoOpen: false,
+		width: 340,
 		buttons: {
 			"Add Media": addMedia
 		}
@@ -84,6 +85,8 @@ $(function(){
 		+ window.location.hostname
 		+ "/QVPublic/faces/art.xhtml?id="
 		+ artId;
+
+	new MediaSelector($("#media_selector1"), $("#url"));
 });
 
 function loadData() {
@@ -187,7 +190,7 @@ function displayArt(art) {
 	mediaListDiv.html("");
 	for (var i = 0; i != art.mediaList.length; ++i) {
 		var txt = $("<p>", {"class": "media", "text": art.mediaList[i].label});
-
+/*
 		txt.append(
 				$("<img>", {
 					"src": "assets/images/pencil.png",
@@ -196,7 +199,7 @@ function displayArt(art) {
 					"onclick": "deleteMedia(" +  art.mediaList[i].id + ");",
 					})
 			);
-
+*/
 		txt.append(
 			$("<img>", {
 				"src": "assets/images/delete.png",
@@ -339,7 +342,7 @@ function showMessage(msg, bError) {
 Label:<br/>
 <input type="text" id="label" size="40"/><br/>
 URL:<br/>
-<input type="text" id="url" size="40"/><br/>
+<input type="text" id="url" size="40"/> <img id="media_selector1" src="assets/images/media_list.png" title="Select media from a list"/> <br/>
 Type:<br/>
 <input type="radio" name="media_type" value="A" checked="checked"/> Audio
 <input type="radio" name="media_type" value="V"/> Video
@@ -372,6 +375,8 @@ Please select an artist to add to this art work:<br/>
 <select id="artist_table" size="10" class="rounded_box" style="width: 300px">
 </select>
 </div>
+
+<ui:include src="media_selector.xhtml"/>
 
 </ui:define>
 

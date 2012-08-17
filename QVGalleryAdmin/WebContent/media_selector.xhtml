@@ -1,0 +1,87 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<script type="text/javascript">
+/* <![CDATA[ */ 
+             
+function MediaSelector(eventSource, urlTarget) {
+	var thisSelector = this;
+	
+	this.src = eventSource;
+	this.target = urlTarget;
+	this.mediaList = null;
+	
+	this.showList = function() {
+		this.dialog = $("#media_selection_dialog").dialog({
+			autoOpen: false,
+			buttons: {
+				"Select Media": thisSelector.selectMedia
+			}
+		});
+			
+		if (thisSelector.mediaList == null) {
+			//Clear old list
+			var mediaTable = $("#media_selection_dialog select")[0];
+			mediaTable.options.length = 0;
+			console.log("Fetching media list");
+			$.ajax({
+				url: "rest/api/medias",
+				type: "GET",
+				success: function(data){
+					thisSelector.mediaList = data;
+					thisSelector.populate();
+					thisSelector.openDialog();
+				},
+				error: function(){console.log("There was an error!");}
+			});
+		} else {
+			thisSelector.openDialog();
+		}
+	};
+	this.populate = function() {
+		var mediaTable = $("#media_selection_dialog select")[0];
+		for (var i = 0; i < this.mediaList.length; ++i) {
+			var option = document.createElement("option");
+			option.text = this.mediaList[i].label;
+			option.value = this.mediaList[i].url;
+			mediaTable.appendChild(option);
+		}
+	}
+
+	this.openDialog = function() {
+		$("#media_selection_dialog").dialog("open");
+	};
+
+	this.selectMedia = function() {
+		$("#media_selection_dialog").dialog("close");
+		var mediaTable = $("#media_selection_dialog select")[0];
+		if (mediaTable.selectedIndex < 0) {
+			return;
+		}
+		var url = mediaTable.options[mediaTable.selectedIndex].value;
+		thisSelector.target.val(url);
+	};
+
+	//Do the work
+	
+	this.src.click(this.showList);
+	this.dialog = $("#media_selection_dialog").dialog({
+		autoOpen: false,
+		buttons: {
+			"Select Media": this.selectMedia
+		}
+	});
+	
+}
+
+/* ]]> */ 
+</script>
+
+<div id="media_selection_dialog" title="Media selection">
+Please select a media:<br/>
+<select size="10" style="width: 275px">
+</select>
+</div>
+
+</html>

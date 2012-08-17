@@ -18,17 +18,20 @@
 /* <![CDATA[ */ 
 var artTable;
 var artList;
+var mediaSelector;
 
 $(function(){
 	$("#create_art").button().width("300px");
 	$("#new_dialog").dialog({
 		autoOpen: false,
+		width: 320,
 		buttons: {
 			"Add Exhibit": addItem
 			}
 	});
 	$("#update_art_dialog").dialog({
 		autoOpen: false,
+		width: 320,
 		buttons: {
 			"Update Exhibit": updateArt
 		}
@@ -59,7 +62,9 @@ $(function(){
 			document.location = "manage_media.xhtml?id="+id;
 		}
 	);
-	
+
+	new MediaSelector($("#media_selector1"), $("#thumbnail"));
+	new MediaSelector($("#media_selector2"), $("#art_thumbnail_update"));
 });
 
 function showEditArt() {
@@ -167,7 +172,7 @@ Name:<br/>
 Description:<br/>
 <textarea rows="10" cols="40" id="description"></textarea>
 Thumbnail image:<br/>
-<input type="text" id="thumbnail" size="40"/><br/>
+<input type="text" id="thumbnail" size="40"/> <img id="media_selector1" src="assets/images/media_list.png" title="Select media from a list"/><br/>
 <br/>
 </div>
 
@@ -177,10 +182,12 @@ Name:<br/>
 Description:<br/>
 <textarea rows="10" cols="40" id="art_description_update"></textarea>
 Thumbnail image:<br/>
-<input type="text" id="art_thumbnail_update" size="40"/><br/>
+<input type="text" id="art_thumbnail_update" size="40"/> <img id="media_selector2" src="assets/images/media_list.png" title="Select media from a list"/><br/>
 <input type="hidden" id="art_id_update"/>
 <br/>
 </div>
+
+<ui:include src="media_selector.xhtml"/>
 
 </ui:define>
 
