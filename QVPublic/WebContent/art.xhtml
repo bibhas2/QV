@@ -28,7 +28,7 @@ $(function(){
 <div data-role="content">
 
 <p>
-<img src="http://#{controller.hostName}/media/#{controller.art.thumbnail}"/>
+<img src="#{controller.art.thumbnail}"/>
 </p>
 <div data-role="collapsible" data-collapsed="true" data-content-theme="d">
 <h3>#{controller.art.artistList[0].name}, #{controller.art.name}</h3>
@@ -40,7 +40,7 @@ $(function(){
 <div data-role="listview" data-inset="true">
 <ui:repeat value="#{controller.art.mediaList}" var="media">
     <li>
-    <a href="http://#{controller.hostName}/media/#{media.url}">
+    <a href="#{media.url}">
     <img src="assets/images/media_#{media.type}.png" class="ui-li-icon"/>
     #{media.label}
     </a>

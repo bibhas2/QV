@@ -38,7 +38,7 @@ $(function(){
 <ui:repeat value="#{controller.artistWorkList}" var="art">
     <li>
     <a href="art.xhtml?id=#{art.id}">
-    <img src="http://#{controller.hostName}/media/#{art.thumbnail}"/>
+    <img src="#{art.thumbnail}"/>
     #{art.name}
     </a>
     </li>

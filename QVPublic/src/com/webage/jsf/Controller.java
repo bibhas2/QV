@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 
 import com.mobiarch.entity.Art;
 import com.mobiarch.entity.Artist;
@@ -19,7 +18,6 @@ public class Controller {
 	int artistId;
 	Gallery gallery;
 	List<Art> artistWorkList;
-	String hostName;
 	@EJB
 	SiteAdmin siteAdmin;
 
@@ -55,21 +53,13 @@ public class Controller {
 		return artistWorkList;
 	}
 
-	public String getHostName() {
-		return hostName;
-	}
-
 	public void loadArt() {
 		art = siteAdmin.getArtFull(artId);
 		gallery = siteAdmin.getGallery(art.getGalleryId());
 		
-		FacesContext context = FacesContext.getCurrentInstance();
-		hostName = context.getExternalContext().getRequestServerName();
 	}
 	public void loadArtist() {
 		artist = siteAdmin.getArtist(artistId);
 		artistWorkList = siteAdmin.getAllArtForArtist(artistId);
-		FacesContext context = FacesContext.getCurrentInstance();
-		hostName = context.getExternalContext().getRequestServerName();
 	}
 }
