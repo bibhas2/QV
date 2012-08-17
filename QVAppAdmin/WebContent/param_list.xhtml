@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<f:metadata>
+    <f:event listener="#{controller.loadParamList()}" type="preRenderView"/>
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+<ui:define name="content">
+<h3>Manage Site Parameters</h3>
+<ui:repeat value="#{controller.paramList}" var="p">
+<h:link outcome="edit_param" value="#{p.label}">
+	<f:param name="name" value="#{p.name}"/><br/>
+</h:link>
+</ui:repeat>
+</ui:define>
+</ui:composition>
+</html>

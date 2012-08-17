@@ -4,8 +4,8 @@ drop table ArtMedia;
 drop table art_artist;                                                          
 drop table Art;                                                                 
 drop table Artist;                                                              
-drop table Gallery;                                                             
 drop table userreg; 
+drop table Gallery;                                                             
 
 CREATE TABLE userreg (
   id integer NOT NULL AUTO_INCREMENT,
@@ -31,7 +31,8 @@ CREATE TABLE Artist (
   description varchar(1024) DEFAULT NULL,
   galleryid integer NOT NULL,
   photo varchar(128) DEFAULT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  CONSTRAINT Artistfk1 FOREIGN KEY (galleryId) REFERENCES Gallery (id)
 );
 
 CREATE TABLE Art (
@@ -40,7 +41,8 @@ CREATE TABLE Art (
   description varchar(1024) DEFAULT NULL,
   thumbnail varchar(256) NOT NULL,
   galleryId integer NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  CONSTRAINT Artfk1 FOREIGN KEY (galleryId) REFERENCES Gallery (id)
 );
 
 CREATE TABLE art_artist (
@@ -64,7 +66,32 @@ CREATE TABLE ArtMedia (
   CONSTRAINT fk1 FOREIGN KEY (artId) REFERENCES Art (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+create table Media (
+	id integer NOT NULL AUTO_INCREMENT,
+  	label varchar(1024) NOT NULL,
+  	fileName varchar(256) NOT NULL,
+  	mimeType varchar(256) NOT NULL,
+  	galleryId integer not null,
+  	
+  	PRIMARY KEY (id),
+  	CONSTRAINT Mediafk1 FOREIGN KEY (galleryId) REFERENCES Gallery (id)
+);
+  	
+create table SysParam (
+	id integer NOT NULL AUTO_INCREMENT,
+  	name varchar(256) NOT NULL,
+  	label varchar(256) NOT NULL,
+  	intValue integer,
+  	stringValue varchar(1024),
+  	
+	PRIMARY KEY (id),
+	UNIQUE KEY email (name)
+);
+
 insert into Gallery (name) values ('MOMA NYC');
 insert into Gallery (name) values ('Miami Art Museum');
 
+insert into SysParam (name, label, stringValue) values ('host_name', 'Host name', '');
+insert into SysParam (name, label, stringValue) values ('media_dir', 'Media storage directory', '');
+insert into SysParam (name, label, stringValue) values ('media_url_prefix', 'Media URL prefix', '');
 

@@ -5,10 +5,12 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/x
     <persistence-unit name="QVPU">
     <jta-data-source>java:jboss/datasources/MySqlDS2</jta-data-source>
     <class>com.mobiarch.entity.User</class>
+    <class>com.mobiarch.entity.Media</class>
     <class>com.mobiarch.entity.Gallery</class>
+    <class>com.mobiarch.entity.Artist</class>
     <class>com.mobiarch.entity.ArtMedia</class>
     <class>com.mobiarch.entity.Art</class>
-    <class>com.mobiarch.entity.Artist</class>
+    <class>com.mobiarch.entity.SysParam</class>
         <properties>
             <property name="showSql" value="true"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />

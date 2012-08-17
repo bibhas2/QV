@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<f:metadata>
+	<f:viewParam name="name" value="#{controller.param.name}"/>
+    <f:event listener="#{controller.loadParam()}" type="preRenderView"/>
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+<ui:define name="content">
+
+<h3>Edit Parameter</h3>
+<h:form>
+<b>Type:</b> #{controller.param.label}<br/><br/>
+Integer value:<br/>
+<h:inputText value="#{controller.param.intValue}" /><br/>
+String value:<br/>
+<h:inputText value="#{controller.param.stringValue}" size="50"/><br/>
+<h:commandButton action="#{controller.updateParam()}" value="Update" />
+<h:inputHidden value="#{controller.param.id}"/>
+</h:form>
+
+</ui:define>
+
+</ui:composition>
+</html>

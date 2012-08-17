@@ -1,0 +1,183 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<f:metadata>
+    <f:event listener="#{controller.checkSession()}" type="preRenderView"/>
+</f:metadata>
+<ui:composition template="template.xhtml">
+<ui:define name="script_content">
+<style>
+.rounded_box {
+	border-radius: 5px;
+	border: solid;
+}
+.media {
+	border-radius: 5px;
+	border: thin solid;
+	padding-left: 5px;
+}
+img.icon {
+	width: 15px;
+	margin-left: 5px;
+}
+img.link {
+	width: 15px;
+	margin-right: 5px;
+}
+input.link {
+	border: thin solid;
+	background: #C0C0C0;
+}
+</style>
+
+<script type="text/javascript">
+/* <![CDATA[ */  
+
+var mediaList = null;
+             
+$(function(){
+	$("button").button();
+	$("#upload_dialog").dialog(
+		{
+			autoOpen: false,
+			buttons: {
+				"Upload": upload
+			}
+		}
+	);
+	$("#upload_btn").click(function() {
+		$("#upload_dialog").dialog("open");
+	});
+
+	$("#progress").hide();
+
+	loadData();
+});
+
+function upload(){
+	var fileIn = $("#fileToUpload")[0];
+	if (fileIn.files === undefined || fileIn.files.length == 0) {
+		alert("Please select a file");
+		return;
+	} else {
+		var file = fileIn.files[0];
+		console.log(file);
+		$("#progress").show();
+		$.ajax({
+			url: "MediaUploader?fileName=" + file.name + "&mimeType=" + file.type +
+				"&label=" + $("#label").val(),
+			type: "POST",
+			data: file,
+			processData: false,
+			contentType: false,
+			success: function(){
+				loadData();
+				$("#progress").hide(); 
+				$("#upload_dialog").dialog("close");
+				},
+			error: function(){alert("Failed");},
+			beforeSend: function (xhr) {
+				xhr.onprogress = showProgress;
+			}
+		});
+	}
+}
+
+function showProgress(evt) {
+	if (evt.lengthComputable) {
+	     var percentComplete = (evt.loaded / evt.total)*100;  
+	     $('#progressbar').progressbar( "option", "value", percentComplete );
+	} 
+}
+
+function loadData() {
+	$.ajax({
+		url: "rest/api/medias",
+		type: "GET",
+		success: function(data){
+			showMediaList(data);
+		},
+		error: function(){showMessage("There was an error!");}
+	});
+	
+}
+
+function showMessage(msg) {
+	alert(msg);
+}
+
+function showMediaList(data) {
+	console.log(data);
+	mediaList = data;
+	
+	var mediaListDiv = $("#media_list");
+	mediaListDiv.html("");
+	for (var i = 0; i != mediaList.length; ++i) {
+		var txt = $("<p>", {"class": "media", "text": mediaList[i].label});
+
+		txt.append(
+				$("<img>", {
+					"src": "assets/images/pencil.png",
+					"title": "Edit",
+					"class": "icon",
+					"onclick": "deleteMedia(" +  mediaList[i].id + ");",
+					})
+			);
+
+		txt.append(
+			$("<img>", {
+				"src": "assets/images/delete.png",
+				"title": "Delete",
+				"class": "icon",
+				"onclick": "deleteMedia(" +  mediaList[i].id + ");",
+				})
+		);
+		txt.append($("<br>"));
+		txt.append(
+				$("<img>", {
+					"src": "assets/images/link.png",
+					"title": "Link to the media file",
+					"class": "link",
+					})
+			);
+
+		var url = $("<input>", {size: 65, "class": "link"});
+		url.val(mediaList[i].url);
+		url.click(function(){
+			this.select();
+			});
+		txt.append(url);
+		
+		mediaListDiv.append(txt);
+	}
+}
+
+/* ]]> */ 
+</script>
+</ui:define>
+
+<ui:define name="left_content">
+<h1>Uploaded Media Files</h1>
+
+<p>
+<button id="upload_btn">Upload Media</button>
+</p>
+
+<div id="media_list">
+</div>
+
+<div id="upload_dialog" title="Upload media file">
+Media file:<br/>
+<input type="file" id="fileToUpload" class="mama"/><br/>
+Label:<br/>
+<input type="text" id="label" size="40"/><br/>
+<div id="progress"></div>
+</div>
+
+</ui:define>
+
+<ui:define name="right_content">
+</ui:define>
+</ui:composition>
+</html>

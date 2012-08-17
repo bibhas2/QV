@@ -19,13 +19,17 @@ import javax.ws.rs.core.MediaType;
 import com.mobiarch.entity.Art;
 import com.mobiarch.entity.ArtMedia;
 import com.mobiarch.entity.Artist;
-import com.mobiarch.jsf.UserSession;
+import com.mobiarch.entity.Media;
+import com.mobiarch.web.UserSession;
 
 @Path("/api")
 @Stateless
 public class API {
 	@EJB
 	SiteAdmin siteAdmin;
+	@EJB
+	MediaManager mediaManager;
+	
 	@Inject
 	UserSession session;
 	
@@ -126,6 +130,14 @@ public class API {
 		checkSession();
 		//TODO: Security check
 		siteAdmin.deleteArtistFromArt(artistId, artId);
+	}
+
+	@GET
+	@Path("/medias")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Media> getMedias() {
+		checkSession();
+		return mediaManager.getAllForGallery(session.getGallery().getId());
 	}
 
 	@GET
