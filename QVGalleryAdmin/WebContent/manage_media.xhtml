@@ -67,6 +67,8 @@ $(function(){
 
 	$("button").button().width("150px");
 	$("#add_media").click(function() {
+		$("#label").val("");
+		$("#url").val("");
 		$("#new_media_dialog").dialog("open");
 	});
 	$("#add_artist").click(function() {
