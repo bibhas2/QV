@@ -11,6 +11,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import com.mobiarch.entity.Media;
 
@@ -64,7 +65,11 @@ public class MediaManager {
 	}
 	
 	public List<Media> getAllForGallery(int galleryId) {
-		List<Media> list = em.createQuery("select m from Media m", Media.class).getResultList();
+		TypedQuery<Media> q = em.createQuery("select m from Media m where galleryId=:galleryId", Media.class);
+		
+		q.setParameter("galleryId", galleryId);
+		
+		List<Media> list = q.getResultList();
 		String mediaURL = pm.getStringValue("media_url_prefix");
 		
 		for (Media m : list) {
