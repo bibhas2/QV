@@ -109,6 +109,7 @@ function loadArtistList() {
 		success: function(data){
 			artistList = data;
 			var artistTable = $("#artist_table")[0];
+			artistTable.options.length = 0;
 			for (var i = 0; i < data.length; ++i) {
 				var option = document.createElement("option");
 				option.text = data[i].name;
@@ -174,7 +175,8 @@ function updateArtist() {
 		type: "POST",
 		contentType: "application/json",
 		data: JSON.stringify(artist),
-		success: function(data){
+		success: function(data) {
+			artistList = null;
 			loadData();
 			$("#update_artist_dialog").dialog("close");
 		},
@@ -277,6 +279,7 @@ function addArtist() {
 		contentType: "application/json",
 		data: data,
 		success: function(){
+			artistList = null;
 			loadData();
 			$("#new_artist_dialog").dialog("close");
 		},

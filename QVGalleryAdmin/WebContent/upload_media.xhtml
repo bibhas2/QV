@@ -28,6 +28,7 @@ img.link {
 input.link {
 	border: thin solid;
 	background: #C0C0C0;
+	width: 350px; 
 }
 </style>
 
@@ -158,7 +159,7 @@ function showMediaList(data) {
 					})
 			);
 
-		var url = $("<input>", {size: 65, "class": "link"});
+		var url = $("<input>", {"class": "link"});
 		url.val(mediaList[i].url);
 		url.click(function(){
 			this.select();
